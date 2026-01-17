@@ -30,7 +30,12 @@ SECRET_KEY = 'django-insecure-#j^x7(knk@jt!qjwj=z(iafc7j5um0ujm9v2wox7onl=1^dbpw
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['nonlaminated-subliminally-latanya.ngrok-free.dev', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [''
+'nonlaminated-subliminally-latanya.ngrok-free.dev',
+'localhost',
+'127.0.0.1',
+'karts.tiago-coutinho.com',
+'www.karts.tiago-coutinho.com']
 
 # CSRF trusted origins for ngrok
 CSRF_TRUSTED_ORIGINS = ['https://nonlaminated-subliminally-latanya.ngrok-free.dev']
