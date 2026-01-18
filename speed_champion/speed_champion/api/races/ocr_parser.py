@@ -5,9 +5,6 @@ import logging
 from typing import Dict
 from datetime import timedelta
 from mistralai import Mistral
-from dotenv import load_dotenv
-
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
