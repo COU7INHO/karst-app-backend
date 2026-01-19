@@ -7,13 +7,15 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load environment variables from .env file
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Points to speed_champion/ (project root)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# In production, this MUST be set via environment variable
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-#j^x7(knk@jt!qjwj=z(iafc7j5um0ujm9v2wox7onl=1^dbpw')
 
 # Application definition
@@ -61,6 +63,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'speed_champion.wsgi.application'
+
+# Database
+# This is overridden in development.py and production.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

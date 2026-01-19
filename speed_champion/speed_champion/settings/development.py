@@ -1,30 +1,38 @@
 """
 Django development settings.
 
-For local development on your Mac with ngrok.
+For local development with:
+- SQLite database
+- Debug mode enabled
+- CORS allow all origins
+- HTTP/HTTPS support for ngrok
 """
 from .base import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode - NEVER set this to True in production
 DEBUG = True
 
+# Allowed hosts for development
 ALLOWED_HOSTS = [
-    'nonlaminated-subliminally-latanya.ngrok-free.dev',
     'localhost',
     '127.0.0.1',
+    'nonlaminated-subliminally-latanya.ngrok-free.dev',  # ngrok tunnel
 ]
 
-# CSRF trusted origins for ngrok
-CSRF_TRUSTED_ORIGINS = ['https://nonlaminated-subliminally-latanya.ngrok-free.dev']
+# CSRF trusted origins - add ngrok and any other dev domains
+CSRF_TRUSTED_ORIGINS = [
+    'https://nonlaminated-subliminally-latanya.ngrok-free.dev',
+]
 
 # Session and Cookie settings for development
-SESSION_COOKIE_SAMESITE = None  # Allow cross-origin (for ngrok)
-SESSION_COOKIE_SECURE = False   # HTTP allowed in development
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = False
+# These allow cross-origin requests from frontend during development
+SESSION_COOKIE_SAMESITE = None   # Allow cross-origin (needed for ngrok)
+SESSION_COOKIE_SECURE = False    # Allow HTTP in development
+SESSION_COOKIE_HTTPONLY = True   # Security: prevent JavaScript access
+CSRF_COOKIE_SAMESITE = None      # Allow cross-origin
+CSRF_COOKIE_SECURE = False       # Allow HTTP in development
 
-# Database - SQLite for development
+# Database - SQLite for easy local development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -32,11 +40,12 @@ DATABASES = {
     }
 }
 
-# CORS - Allow all origins in development
+# CORS - Allow all origins in development for easy frontend testing
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Add debug middleware for development
+# Add debug middleware to track requests during development
 MIDDLEWARE.insert(2, 'speed_champion.debug_middleware.DebugRequestMiddleware')
 
-# Static files
+# Static files configuration
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'

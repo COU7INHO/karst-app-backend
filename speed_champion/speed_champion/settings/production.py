@@ -1,82 +1,118 @@
 """
 Django production settings.
 
-For Raspberry Pi deployment with PostgreSQL and HTTPS.
+For production deployment with:
+- PostgreSQL database
+- HTTPS enforced
+- Enhanced security headers
+- Restricted CORS origins
+- Production-grade logging
 """
 import os
 from .base import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode - MUST be False in production
 DEBUG = False
 
+# Allowed hosts - only allow specific production domains
 ALLOWED_HOSTS = [
     'karts.tiago-coutinho.com',
     'www.karts.tiago-coutinho.com',
 ]
 
-# CSRF trusted origins
+# CSRF trusted origins - must match ALLOWED_HOSTS
 CSRF_TRUSTED_ORIGINS = [
     'https://karts.tiago-coutinho.com',
     'https://www.karts.tiago-coutinho.com',
 ]
 
-# Session and Cookie settings for production (HTTPS)
-SESSION_COOKIE_SECURE = True    # HTTPS only
-SESSION_COOKIE_SAMESITE = 'Lax' # Same-domain (frontend on same domain)
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'Lax'
+# Session and Cookie settings for production
+# All cookies must be secure (HTTPS only) in production
+SESSION_COOKIE_SECURE = True     # Require HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # Protection against CSRF
+SESSION_COOKIE_HTTPONLY = True   # Prevent JavaScript access
+CSRF_COOKIE_SECURE = True        # Require HTTPS
+CSRF_COOKIE_SAMESITE = 'Lax'     # Protection against CSRF
 
 # Database - PostgreSQL for production
+# All credentials should be set via environment variables
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'karts_db'),
         'USER': os.getenv('DB_USER', 'karts_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'change-this-password'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # REQUIRED in production
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
-        'CONN_MAX_AGE': 600,  # Connection pooling
+        'CONN_MAX_AGE': 600,  # Keep connections alive for 10 minutes
+        'OPTIONS': {
+            'connect_timeout': 10,
+        }
     }
 }
 
-# CORS - Only allow specific frontend domain
+# CORS - Only allow specific trusted frontend origins
+# NEVER use CORS_ALLOW_ALL_ORIGINS in production
 CORS_ALLOWED_ORIGINS = [
-    'https://karts.tiago-coutinho.com',  # Your Lovable frontend URL
-    # Add Lovable domain when you have it:
-    # 'https://your-lovable-app.lovable.dev',
+    'https://karts.tiago-coutinho.com',
+    'https://www.karts.tiago-coutinho.com',
 ]
 
-# Static files
-STATIC_ROOT = '/home/pi/karts-app/staticfiles'
+# Static files - served by Nginx/Apache in production
+STATIC_ROOT = os.getenv('STATIC_ROOT', BASE_DIR / 'staticfiles')
+STATIC_URL = '/static/'
 
-# Security settings
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+# Media files (user uploads)
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', BASE_DIR / 'media')
+MEDIA_URL = '/media/'
 
-# Logging
+# Security settings - enforce HTTPS and secure headers
+SECURE_SSL_REDIRECT = True                                        # Redirect all HTTP to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')   # Trust X-Forwarded-Proto from reverse proxy
+SECURE_HSTS_SECONDS = 31536000                                   # Enable HSTS for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True                            # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True                                       # Allow preloading in browsers
+SECURE_BROWSER_XSS_FILTER = True                                 # Enable XSS filter
+SECURE_CONTENT_TYPE_NOSNIFF = True                               # Prevent MIME sniffing
+X_FRAME_OPTIONS = 'DENY'                                         # Prevent clickjacking
+
+# Logging configuration for production
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': '/home/pi/karts-app/django.log',
+            'filename': os.getenv('LOG_FILE', BASE_DIR / 'django.log'),
+            'formatter': 'verbose',
         },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
     },
     'root': {
         'handlers': ['console', 'file'],
         'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
     },
 }
