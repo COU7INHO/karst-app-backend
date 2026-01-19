@@ -43,9 +43,6 @@ DATABASES = {
 # CORS - Allow all origins in development for easy frontend testing
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Add debug middleware to track requests during development
-MIDDLEWARE.insert(2, 'speed_champion.debug_middleware.DebugRequestMiddleware')
-
 # Static files configuration
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'

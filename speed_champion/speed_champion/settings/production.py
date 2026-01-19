@@ -76,43 +76,6 @@ SECURE_BROWSER_XSS_FILTER = True                                 # Enable XSS fi
 SECURE_CONTENT_TYPE_NOSNIFF = True                               # Prevent MIME sniffing
 X_FRAME_OPTIONS = 'DENY'                                         # Prevent clickjacking
 
-# Logging configuration for production
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': os.getenv('LOG_FILE', BASE_DIR / 'django.log'),
-            'formatter': 'verbose',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-    },
-}
+# Logging - change to WARNING level for production
+LOGGING['loggers']['speed_champion']['level'] = 'INFO'
+LOGGING['loggers']['django']['level'] = 'INFO'

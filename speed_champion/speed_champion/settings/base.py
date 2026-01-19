@@ -127,3 +127,47 @@ CORS_ALLOW_HEADERS = [
 ]
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 CORS_PREFLIGHT_MAX_AGE = 86400  # Cache preflight for 24h
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'app_file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'app_logs.log',
+            'formatter': 'verbose',
+        },
+        'django_file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'django.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'speed_champion': {
+            'handlers': ['console', 'app_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console', 'django_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
