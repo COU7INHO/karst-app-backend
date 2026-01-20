@@ -1,6 +1,7 @@
 import re
 import os
 import base64
+import json
 import logging
 from typing import Dict
 from datetime import timedelta
@@ -114,6 +115,7 @@ def extract_race_data_from_image(image_file) -> Dict:
 
     logger.info("Calling Mistral API with pixtral-12b-2409 model...")
 
+    result_text = None
     try:
         response = client.chat.complete(
             model="pixtral-12b-2409",
@@ -132,7 +134,6 @@ def extract_race_data_from_image(image_file) -> Dict:
         logger.debug(f"Response object: {response}")
 
         # Parse response
-        import json
         result_text = response.choices[0].message.content
         logger.info(f"Raw response length: {len(result_text)} chars")
         logger.debug(f"Raw response text: {result_text[:500]}...")
