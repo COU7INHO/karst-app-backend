@@ -33,6 +33,7 @@ SESSION_COOKIE_SAMESITE = 'Lax'  # Protection against CSRF
 SESSION_COOKIE_HTTPONLY = True   # Prevent JavaScript access
 CSRF_COOKIE_SECURE = True        # Require HTTPS
 CSRF_COOKIE_SAMESITE = 'Lax'     # Protection against CSRF
+CSRF_COOKIE_HTTPONLY = False     # Allow JavaScript to read CSRF token
 
 # Database - PostgreSQL for production
 # All credentials should be set via environment variables
