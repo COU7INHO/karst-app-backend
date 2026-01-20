@@ -56,7 +56,13 @@ DATABASES = {
 # NEVER use CORS_ALLOW_ALL_ORIGINS in production
 CORS_ALLOWED_ORIGINS = [
     'https://karts.tiago-coutinho.com',
-    'https://www.karts.tiago-coutinho.com',
+    'https://www.karts.tiago-coutinho.com', # Alternative port
+]
+
+# Allow Lovable domains
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.lovable\.app$",
+    r"^https://.*\.lovable\.dev$",
 ]
 
 # Static files - served by Nginx in production
@@ -78,6 +84,16 @@ SECURE_BROWSER_XSS_FILTER = True                                 # Enable XSS fi
 SECURE_CONTENT_TYPE_NOSNIFF = True                               # Prevent MIME sniffing
 X_FRAME_OPTIONS = 'DENY'                                         # Prevent clickjacking
 
-# Logging - change to WARNING level for production
-LOGGING['loggers']['speed_champion']['level'] = 'INFO'
-LOGGING['loggers']['django']['level'] = 'INFO'
+# Logging - DEBUG level for troubleshooting (change to INFO after fixing)
+LOGGING['loggers']['speed_champion']['level'] = 'DEBUG'
+LOGGING['loggers']['django']['level'] = 'DEBUG'
+LOGGING['loggers']['django.request'] = {
+    'handlers': ['console'],
+    'level': 'DEBUG',
+    'propagate': False,
+}
+LOGGING['loggers']['django.security'] = {
+    'handlers': ['console'],
+    'level': 'DEBUG',
+    'propagate': False,
+}
