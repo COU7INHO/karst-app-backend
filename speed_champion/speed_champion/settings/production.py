@@ -58,12 +58,12 @@ CORS_ALLOWED_ORIGINS = [
     'https://www.karts.tiago-coutinho.com',
 ]
 
-# Static files - served by Nginx/Apache in production
-STATIC_ROOT = os.getenv('STATIC_ROOT', BASE_DIR / 'staticfiles')
+# Static files - served by Nginx in production
+STATIC_ROOT = '/app/staticfiles'
 STATIC_URL = '/static/'
 
 # Media files (user uploads)
-MEDIA_ROOT = os.getenv('MEDIA_ROOT', BASE_DIR / 'media')
+MEDIA_ROOT = '/app/media'
 MEDIA_URL = '/media/'
 
 # Security settings - enforce HTTPS and secure headers
