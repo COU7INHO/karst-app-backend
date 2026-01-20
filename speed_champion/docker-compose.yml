@@ -24,8 +24,8 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - /var/www/karts/static:/app/staticfiles
+      - /var/www/karts/media:/app/media
     environment:
       - DJANGO_ENV=production
       - SECRET_KEY=${SECRET_KEY}

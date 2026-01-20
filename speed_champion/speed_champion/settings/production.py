@@ -67,8 +67,9 @@ MEDIA_ROOT = os.getenv('MEDIA_ROOT', BASE_DIR / 'media')
 MEDIA_URL = '/media/'
 
 # Security settings - enforce HTTPS and secure headers
-SECURE_SSL_REDIRECT = True                                        # Redirect all HTTP to HTTPS
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')   # Trust X-Forwarded-Proto from reverse proxy
+# SSL is handled by Cloudflare, so we don't redirect here
+SECURE_SSL_REDIRECT = False                                       # Cloudflare handles SSL
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')   # Trust X-Forwarded-Proto from Cloudflare
 SECURE_HSTS_SECONDS = 31536000                                   # Enable HSTS for 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True                            # Apply HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True                                       # Allow preloading in browsers
