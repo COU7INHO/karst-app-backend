@@ -202,5 +202,3 @@ Private project - All rights reserved
 ---
 
 **Live Application:** [karts.tiago-coutinho.com](https://karts.tiago-coutinho.com)
-
-**Admin Panel:** [karts.tiago-coutinho.com/admin](https://karts.tiago-coutinho.com/admin)
