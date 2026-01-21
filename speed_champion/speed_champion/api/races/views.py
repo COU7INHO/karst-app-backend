@@ -83,8 +83,8 @@ class ListRacesView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        # Filter by driver if provided
-        driver_id = request.query_params.get('driver')
+        # Filter by driver if provided (accept both 'driver' and 'drivers')
+        driver_id = request.query_params.get('driver') or request.query_params.get('drivers')
         if driver_id:
             try:
                 driver_id = int(driver_id)

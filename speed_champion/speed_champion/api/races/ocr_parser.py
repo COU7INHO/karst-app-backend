@@ -160,5 +160,10 @@ def extract_race_data_from_image(image_file) -> Dict:
         raise Exception(f"Invalid JSON response from OCR: {e}")
 
     except Exception as e:
+        # Check for rate limit error
+        if "429" in str(e) or "rate limit" in str(e).lower():
+            logger.warning(f"Mistral API rate limit hit: {e}")
+            raise Exception("Rate limit exceeded. Please wait a few minutes before trying again.")
+
         logger.error(f"Mistral API call failed: {e}", exc_info=True)
         raise
