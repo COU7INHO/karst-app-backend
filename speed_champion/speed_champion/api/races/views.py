@@ -66,7 +66,7 @@ class UploadRaceImageView(APIView):
 
 
 class ListRacesView(APIView):
-    """List all races, optionally filter by circuit."""
+    """List all races, optionally filter by circuit or driver."""
 
     def get(self, request):
         races = Race.objects.all()
@@ -80,6 +80,18 @@ class ListRacesView(APIView):
             except ValueError:
                 return Response(
                     {"error": "Invalid circuit ID"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Filter by driver if provided
+        driver_id = request.query_params.get('driver')
+        if driver_id:
+            try:
+                driver_id = int(driver_id)
+                races = races.filter(raceresult__driver_id=driver_id).distinct()
+            except ValueError:
+                return Response(
+                    {"error": "Invalid driver ID"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
