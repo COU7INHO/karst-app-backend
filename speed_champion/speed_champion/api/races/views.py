@@ -88,7 +88,7 @@ class ListRacesView(APIView):
         if driver_id:
             try:
                 driver_id = int(driver_id)
-                races = races.filter(raceresult__driver_id=driver_id).distinct()
+                races = races.filter(results__driver_id=driver_id).distinct()
             except ValueError:
                 return Response(
                     {"error": "Invalid driver ID"},
